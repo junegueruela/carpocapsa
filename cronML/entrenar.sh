@@ -1,0 +1,1 @@
+cd /usr/src/app && python entrenar.py > /usr/src/app/entrenar.log

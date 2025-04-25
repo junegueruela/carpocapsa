@@ -1,0 +1,42 @@
+﻿{% extends 'base.html' %}
+{% block titulo %} Datos meteorológicos por estación {% endblock %}
+{% block contenido %}
+<h1>Información por municipio</h1>
+<form action="" method="post">
+    {{ form.hidden_tag()}}
+    {{ form.municipio.label }} {{ form.municipio() }}
+    {{ form.submit }}
+</form>
+
+{% if dic %}
+
+<dd><div>
+    <i>Estación de referencia:</i> {{dic.Estacion}}, <i>distancia a la estación: </i>{{dic.distancia}}km , <i>diferencia de altitud: </i>{{dic.difAltitud}}m
+    <br><br>
+</div></dd>
+{% endif %}
+<table>
+    <tr>
+        <td>
+            
+            {% if prediccion %}
+               <h2> Predicción para la próxima semana</h2>
+               {{prediccion | safe}}
+               <br>
+               <form action="" method="post">
+                    {{ formB.hidden_tag()}}
+                    <!-- Campo oculto para almacenar el valor de 'municipio' -->
+                    <input type="hidden" name="municipio" value="{{ form.municipio.data }}">
+                    {{ formB.actualizar }}
+                </form>
+            {% endif %}
+        </td>
+        <td valign="top">
+            {% if leyenda %}
+             {{leyenda | safe}}
+            {% endif %}
+        </td>
+    </tr>
+</table>
+
+{% endblock %}

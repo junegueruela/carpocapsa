@@ -1,0 +1,110 @@
+/* Estilo espec�fico para la cuerpo */
+body {
+    font-size: 11pt;
+    font-family: Arial;
+    background-color: #e9f7ef;
+}
+
+/* Estilos para la clase 'menu-table' que es la específica para el menú de navegación de la izquierda */
+.menu-table {
+    width: 180px;
+    background-color: #a9dfbf;
+    border-collapse: collapse;
+}
+
+    .menu-table td {
+        font-size: 10pt;
+        font-family: Arial;
+        padding: 2px;
+        text-align: left;
+        border: 4px solid #e9f7ef;
+    }
+
+    .menu-table a {
+        color: black;
+        text-decoration: none;
+        display: block;
+        padding: 2px;
+    }
+
+        .menu-table a:hover {
+            background-color: black;
+            color: #e9f7ef;
+        }
+
+/* Estilo para los p�rrafos de la tabla de dise�o, la que se dibuja en base */
+/* tabla P es la parte superior de la tabla, donde va el logo y el t�tulo*/
+.tablaP {
+    width: 100%;
+    font-size: 11pt;
+    font-family: Arial;
+    background-color: #a9dfbf;
+    border-collapse: collapse;
+}
+/* Principal son las dos celdas inferiores*/
+.principal {
+    font-size: 11pt;
+    font-family: Arial;
+    background-color: #e9f7ef;
+    text-align: left;
+    vertical-align: top;
+}
+
+/* Estilo para los formularios */
+.form {
+    font-size: 11pt;
+    font-family: Arial;
+    background-color: #e9f7ef;
+    font-weight: bold;
+    font-style: italic;
+}
+
+/* Estilo para las cabeceras */
+.cabecera {
+    font-size: 18pt;
+    font-family: Arial;
+    background-color: #a9dfbf;
+    text-align: center;
+    font-weight: bold;
+}
+h1 {
+    font-size: 16pt;
+    font-family: Arial;
+    color: darkcyan;
+    text-align: center;
+}
+h2 {
+    font-size: 14pt;
+    font-family: Arial;
+    text-align: center;
+    color: darkcyan;
+    font-weight: bold;
+}
+
+/* Estilos para las tablas de datos includes alternating gray and white with on-hover color */
+
+.tablas {
+    font-size: 11pt;
+    font-family: Arial;
+    border-collapse: collapse;
+    border: 1px solid #e9f7ef;
+}
+
+    .tablas td, th {
+        padding: 5px;
+    }
+
+    .tablas tr:nth-child(even) {
+        background: #d0f1dd;
+    }
+
+    .tablas tr:hover {
+        background: silver;
+        cursor: pointer;
+    }
+
+.user-info {
+    font-size: 10pt;
+    font-family: Arial;
+    font-style: italic;
+}

@@ -1,0 +1,86 @@
+body {
+    font-size: 11pt;
+    font-family: Arial;
+    background-color: #e9f7ef;
+}
+
+.custom-header {
+    background-color: #a9dfbf; /* Verde del logo */
+}
+.user-info {
+    font-size: 10pt;
+    font-style: italic;
+}
+
+/* Colores personalizados */
+.bg-success-subtle {
+    background-color: #a9dfbf !important;
+}
+
+/* Links del menú */
+.nav-link {
+    padding: 6px 10px;
+    border-radius: 5px;
+}
+
+.nav-link:hover {
+    background-color: black;
+    color: #e9f7ef !important;
+}
+
+
+/* Estilo para las cabeceras */
+
+/* Títulos */
+h1 {
+    font-size: 16pt;
+    color: #a9dfbf;
+    text-align: center;
+}
+
+/* Menú de navegación */
+.offcanvas-verde {
+    background-color: #a9dfbf; /* el verde característico del logo */
+}
+
+.offcanvas-verde .nav-link {
+    color: black;
+}
+
+.offcanvas-verde .nav-link:hover {
+    background-color: #2e6f4e; /* un verde más oscuro al pasar el ratón */
+    color: #e9f7ef;
+}
+
+.offcanvas-verde .offcanvas-header {
+    border-bottom: 1px solid #e9f7ef;
+}
+
+h2 {
+    font-size: 14pt;
+    color: #a9dfbf;
+    text-align: center;
+    font-weight: bold;
+}
+
+/* Tablas de datos */
+.tablas {
+    font-size: 11pt;
+    font-family: Arial;
+    border-collapse: collapse;
+    border: 1px solid #e9f7ef;
+    width: 100%;
+}
+
+.tablas td, .tablas th {
+    padding: 5px;
+}
+
+.tablas tr:nth-child(even) {
+    background: #d0f1dd;
+}
+
+.tablas tr:hover {
+    background: silver;
+    cursor: pointer;
+}

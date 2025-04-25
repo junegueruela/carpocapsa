@@ -1,0 +1,1 @@
+cd /usr/src/app && python hacerpredicciones.py > /usr/src/app/hacerpredicciones.log

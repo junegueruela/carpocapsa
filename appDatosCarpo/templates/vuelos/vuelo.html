@@ -1,0 +1,34 @@
+﻿{% extends 'base.html' %}
+{% block titulo %} Página de registro {% endblock %}
+{% block contenido %}
+<h1>Capturas de carpocapsa por finca</h1>
+<form action="" method="post">
+    {{ formT.hidden_tag()}}
+    {{ formT.termino.label }} {{ formT.termino() }}
+    <p class="form"> Consultar las últimas capturas </p>
+    <dd>
+        {{ formT.nCapturas.label }} {{ formT.nCapturas() }}
+        {{ formT.submit }}
+    </dd>
+    <p class="form"> Si lo prefiere, puede consultar por rango de fechas</p>
+    <dd>
+        {{ formT.fechaMin.label }} {{ formT.fechaMin() }}
+        {{ formT.fechaMax.label }} {{ formT.fechaMax() }}
+        {{ formT.submitF}}
+    </dd>
+</form>
+    {% if formA %}
+    <p> Añada una captura </p>
+    <form action="" method="post">
+        {{ formA.hidden_tag()}}
+        {{ formA.fechaCaptura.label }} {{ formA.fechaCaptura }}
+        {{ formA.numVuelos.label }} {{ formA.numVuelos }}
+        <!-- Campo oculto para almacenar el valor de 'termino' -->
+        <input type="hidden" name="termino" value="{{ formT.termino.data }}">
+        {{ formA.submit2 }}
+        {% endif %}
+    </form>
+    {% if datos %}
+    <p>{{datos | safe}}</p>
+    {% endif %}
+    {% endblock %}

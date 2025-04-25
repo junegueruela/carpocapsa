@@ -1,0 +1,97 @@
+services:
+  mysql:
+    image: mysql:latest
+    container_name: mySqlDocker
+    hostname: 2b38cdb639c7
+    mac_address: 02:42:ac:11:00:02
+    environment:
+      MYSQL_ROOT_PASSWORD: carpocapsa
+      PATH: /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+      GOSU_VERSION: 1.17
+      MYSQL_MAJOR: innovation
+      MYSQL_VERSION: 9.0.1-1.el9
+      MYSQL_SHELL_VERSION: 9.0.1-1.el9
+      TZ: Europe/Madrid   # Aquí también puedes establecer la zona horaria
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - backup:/backup
+    ports:
+      - "3306:3306"
+    restart: "unless-stopped"
+    runtime: runc
+    networks:
+    - miRed
+  automysqlbackup:
+    image: selim13/automysqlbackup
+    container_name: mySqlbackup
+    environment:
+      DBHOST: mySqlDocker
+      DBNAMES: all
+      USERNAME: root
+      PASSWORD: carpocapsa
+      CRON_SCHEDULE: "30 12 * * 1" ##Diario
+      TZ: Europe/Madrid   # Aquí también puedes establecer la zona horaria
+    volumes:
+      - backup:/backup
+    restart: "unless-stopped"
+    depends_on:
+        - mysql
+    networks:
+    - miRed   
+  cron_etl:    # Nuevo servicio
+    build:
+        context: ./cronETL
+    image: cron_etl       # Imagen construida
+    container_name: cronETL    # Nombre del contenedor
+    hostname: 252654c43934       # Hostname del contenedor  
+    environment:
+      PATH: /usr/local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+      LANG: ES.UTF-8
+      GPG_KEY: 7169605F62C751356D054A26A821E680E5FA6305
+      PYTHON_VERSION: 3.12.6
+      TZ: Europe/Madrid   # Aquí también puedes establecer la zona horaria
+    working_dir: /usr/src/app    # Directorio de trabajo
+    restart: "unless-stopped"               # Políticas de reinicio
+    networks:
+      - miRed                    # Conectar a la red existente
+  cron_ml:
+    build:
+        context: ./cronML
+    image: cron_ml           # Imagen para predicción
+    container_name: cronML      # Nombre del contenedor
+    hostname: cront-prediccion          # Hostname
+    environment:
+      PATH: /usr/local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+      LANG: ES.UTF-8
+      GPG_KEY: 7169605F62C751356D054A26A821E680E5FA6305
+      PYTHON_VERSION: 3.12.6
+      TZ: Europe/Madrid
+    working_dir: /usr/src/app
+    restart: "unless-stopped"
+    networks:
+      - miRed
+  appdatoscarpo:                  # Nuevo servicio
+    build:
+        context: ./appDatosCarpo
+    image: appdatoscarpo      # Imagen que has construido
+    container_name: appDatosCarpo   # Nombre del contenedor
+    hostname: 7f8bbf70ff82       # Hostname del contenedor
+    environment:
+      PATH: /usr/local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin 
+      LANG: ES.UTF-8
+      GPG_KEY: 7169605F62C751356D054A26A821E680E5FA6305
+      PYTHON_VERSION: 3.12.6
+      TZ: Europe/Madrid   # Aquí también puedes establecer la zona horaria
+    working_dir: /usr/src/app    # Directorio de trabajo
+    ports:
+      - "5000:5000"
+    restart: "unless-stopped"                # Políticas de reinicio
+    networks:
+      - miRed                    # Conectar a la red existente
+# Me crea los volúmenes de datos y backup para que persistan, si no existen.
+volumes:
+  mysql_data:
+  backup:
+# Me crea la red 
+networks:
+  miRed:

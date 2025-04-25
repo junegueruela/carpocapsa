@@ -1,0 +1,13 @@
+﻿{% extends 'base.html' %}
+{% block titulo %} Página de inicio {% endblock %}
+{% block contenido %}
+<h2>Red de estaciones agroclimáticas SIAR que afectan a la DOP</h2>
+<table>
+    <tr>
+        <td>{{estaciones | safe}}</td>
+        <td valign="top"> <br>{{leyenda | safe}}</td>
+    </tr>
+</table>
+<h2>Municipios de la DOP y su estación de referencia</h2>
+{{municipios | safe}}
+{% endblock %}

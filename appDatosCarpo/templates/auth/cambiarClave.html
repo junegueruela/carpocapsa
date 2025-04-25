@@ -1,0 +1,15 @@
+﻿{% extends 'base.html' %}
+{% block titulo %} Datos meteorológicos por estación {% endblock %}
+{% block contenido %}
+<h1>Información por municipio</h1>
+<form action="" method="post">
+    {{ form.hidden_tag()}}
+    {{ form.oldPassword.label }} {{ form.oldPassword }}
+    {{ form.newPassword.label }} {{ form.newPassword }}
+    {{ form.confirmPassword.label }} {{ form.confirmPassword }}
+    {{ form.submit }}
+</form>
+{% if mensaje %}
+{{mensaje}}
+{% endif %}
+{% endblock %}

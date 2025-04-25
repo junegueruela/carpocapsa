@@ -1,0 +1,73 @@
+Listado de rutas de carpetas para el volumen Nuevo vol
+El n£mero de serie del volumen es C099-828C
+D:.
+|   docker-compose.yml
+|   estructura.txt
+|   
++---appDatosCarpo
+|   |   conexionSGBD.py
+|   |   Dockerfile
+|   |   forms.py
+|   |   hello.py
+|   |   obtenerDatos.py
+|   |   requirements.txt
+|   |   util.py
+|   |   
+|   +---static
+|   |   +---css
+|   |   |       style copy.css
+|   |   |       style.css
+|   |   |       
+|   |   \---img
+|   |           pera.jpg
+|   |           sello.png
+|   |           
+|   \---templates
+|       |   base.html
+|       |   index.html
+|       |   
+|       +---auth
+|       |       cambiarClave.html
+|       |       login.html
+|       |       
+|       +---estaciones
+|       |       estacion.html
+|       |       
+|       +---municipios
+|       |       municipio.html
+|       |       
+|       +---panel
+|       |       panel.html
+|       |       
+|       \---vuelos
+|               vuelo.html
+|               
++---cronETL
+|       actualizarEstaciones.log
+|       actualizarEstaciones.py
+|       actualizarEstaciones.sh
+|       actualizarMunicipios.py
+|       actualizarMunicipios.sh
+|       actualizarMunicipios2.py
+|       actualizarMunicipios2.sh
+|       conexionSGBD.py
+|       crontab.txt
+|       Dockerfile
+|       obtenerDatos.py
+|       requirements.txt
+|       root
+|       util.py
+|       
+\---cronML
+        conexionSGBD.py
+        Dockerfile
+        hacerpredicciones.py
+        hacerpredicciones.sh
+        modelos.py
+        predicciones.py
+        random_forest_model.pkl
+        requirements.txt
+        root
+        scaler.pkl
+        util.py
+        

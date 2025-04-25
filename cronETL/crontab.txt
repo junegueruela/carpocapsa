@@ -1,0 +1,6 @@
+# Ejecutar script1.py todos los días a las 12:00 AM
+8       9       *       *       *       /usr/src/app/actualizarEstaciones.sh
+0       9       *       *       *       /usr/src/app/actualizarMunicipios.sh
+5       9       *       *       *       /usr/src/app/actualizarMunicipios2.sh
+
+

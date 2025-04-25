@@ -1,0 +1,47 @@
+﻿<!doctype html>
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" crossorigin="anonymous">
+    <title>Mi sitio web - {% block titulo %} {% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" >
+</head>
+<body>
+    <div class="container-fluid custom-header text-white p-3 d-flex align-items-center">
+        <img src="{{ url_for('static', filename='img/pera.jpg') }}" alt="DOP Pera de Rincón" class="me-3" style="height: 60px;">
+        <h1 class="h5 mb-0">Sistema de predicción de la carpocapsa, para la DOP Pera de Rincón</h1>
+        <!-- Botón menú -->
+        <button class="btn btn-outline-light ms-auto" type="button" data-bs-toggle="offcanvas" data-bs-target="#menu" aria-controls="menu">
+            ☰ Menú
+        </button>
+    </div>
+
+    <!-- Menú offcanvas -->
+    <div class="offcanvas offcanvas-start offcanvas-verde text-white" tabindex="-1" id="menu" aria-labelledby="menuLabel">
+        <div class="offcanvas-header">
+            <h5 id="menuLabel">Menú</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Cerrar"></button>
+        </div>
+        <div class="offcanvas-body">
+            <nav class="nav flex-column">
+                <a class="nav-link" href="{{ url_for('index') }}">Inicio</a>
+                <a class="nav-link" href="{{ url_for('vuelo') }}">Capturas por finca</a>
+                <a class="nav-link" href="{{ url_for('estacion') }}">Redes meteorológicas</a>
+                <a class="nav-link" href="{{ url_for('municipio') }}">Municipios de la DOP</a>
+                <a class="nav-link" href="{{ url_for('cambiarClave') }}">Cambiar contraseña</a>
+                <a class="nav-link text-danger" href="{{ url_for('logout') }}">Salir</a>
+                <hr>
+                <div class="text-muted">Acceso autorizado</div>
+                <div class="fw-bold">{{ current_user.nombre }}</div>
+            </nav>
+        </div>
+    </div>
+
+    <!-- Contenido -->
+    <div class="container my-4">
+        {% block contenido %}
+        {% endblock %}
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js" integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq" crossorigin="anonymous"></script>
+</body>
+</html>

@@ -1,0 +1,32 @@
+﻿{% extends 'base.html' %}
+{% block titulo %} Datos meteorológicos por estación {% endblock %}
+{% block contenido %}
+<h1>Redes meteorológicas de la Rioja</h1>
+<form action="" method="post">
+    {{ form.hidden_tag()}}
+    {{ form.estacion.label }} {{ form.estacion() }}
+    {{ form.nDias.label }} {{ form.nDias }}
+    {{ form.submit }}
+</form>
+    {% if formB %}
+<p> Si considera que ha habido una lectura errónea, borre los datos de ese periodo y después vuelva a cargarlo. </p>
+    <form action="" method="post">
+    {{ formB.hidden_tag()}}
+    {{ formB.fechaDesde.label }} {{ formB.fechaDesde }}
+    {{ formB.fechaHasta.label }} {{ formB.fechaHasta }}
+    <!-- Campo oculto para almacenar el valor de 'estación' -->
+    <input type="hidden" name="estacion" value="{{ form.estacion.data }}">
+    {{ formB.borrar }}
+    {{ formB.cargar }}
+    {% endif %}
+</form>
+	{% if datos %}
+<table>
+    <tr>
+        <td>{{datos | safe}}</td>
+        <td valign="top"><br>{{leyenda | safe}}</td>
+    </tr>
+</table>
+
+      {% endif %}
+{% endblock %}

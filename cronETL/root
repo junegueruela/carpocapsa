@@ -1,0 +1,7 @@
+# Ejecutar script1.py todos los días a las 12:00 AM
+# do daily/weekly/monthly maintenance
+# min   hour    day     month   weekday command
+4       9       *       *       *       /usr/src/app/actualizarEstaciones.sh
+0       9       *       *       *       /usr/src/app/actualizarMunicipios.sh
+2       9       *       *       *       /usr/src/app/actualizarMunicipios2.sh
+
