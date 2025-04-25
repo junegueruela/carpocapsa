@@ -174,4 +174,4 @@ def realizarPredicciones():
     ## Guardamos las estimaciones
     print(fecha_actual)
     cS.borraPrediccionPlaga(fecha_actual)
-    cS.insertarPrediccion(probabilidades)
+    cS.insertarPrediccionPlagas(probabilidades)

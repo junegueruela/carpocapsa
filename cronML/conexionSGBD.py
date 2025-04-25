@@ -145,6 +145,11 @@ def getMunicipiosConVuelos():
 
 ## GESTIÓN DE LAS PREDICCIONES AEMET
 
+## Procedimiento que inserta un df de la predicción meterorológica.
+def insertarPrediccion(df):
+    insertaTabla('PrediccionAEMET',df)
+
+
 ## Procedimiento para borrar la predicción de un municipio
 ## Por ejemplo, si los datos no son completos.
 def borraPrediccion(idMunicipio):
@@ -176,7 +181,7 @@ def getTodoModelo():
     df_Todo['fecha']=pd.to_datetime(df_Todo['fecha'])
     return df_Todo
 ## Insertamos las predicciones
-def insertarPrediccion(df):
+def insertarPrediccionPlagas(df):
     insertaTabla('predicciones',df)
 ## Obtenemos las predicciones
 def getTodasPredicciones():
