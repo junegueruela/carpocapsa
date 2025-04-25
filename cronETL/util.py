@@ -22,7 +22,6 @@ def convertirString(fecha,origen='otros'):
         in_format='%Y-%m-%dT%H:%M:%S'
     else:
         in_format='%Y-%m-%d %H:%M:%S'
-    ##in_format='%Y-%m-%d %H:%M:%S'
     fecha=datetime.datetime.strptime(fecha, in_format)
     strfecha=fecha.strftime(out_format)
     return strfecha

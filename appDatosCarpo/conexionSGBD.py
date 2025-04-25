@@ -82,7 +82,6 @@ def getFechaMinima(estacion):
 def getEstaciones():
     query='select estacion, municipio from Estaciones' 
     df=ejecuteQuery(query)
-    #fechaDate=convertirDate(df_fecha["fecha_MAX"][0])
     return df
 
 ### Obtención de  los datos de una estación por su Id.
@@ -90,7 +89,6 @@ def getEstacion(estacion):
     date_format= '%Y-%m-%d'
     sqlEstacion='select * from Estaciones where estacion='+estacion
     df=ejecuteQuery( sqlEstacion)
-    #fechaDate=convertirDate(df_fecha["fecha_MAX"][0])
     return df
 
 ### Obtención de un resumen de los últimos datos recogidos por estación
@@ -104,7 +102,6 @@ def getUltimosDatosEstaciones():
             GROUP BY estacion
         ) t2 ON t.estacion = t2.estacion AND t.fecha = t2.max_fecha''' 
     df=ejecuteQuery(query)
-    #fechaDate=convertirDate(df_fecha["fecha_MAX"][0])
     return df
 
 ### PROCEDIMIENTOS Y FUNCIONES PARA OPERAR CON LOS VUELOS
@@ -114,7 +111,6 @@ def getDatosVuelos(termino,fechaMin='2005-01-01',fechaMax=datetime.datetime.toda
     queryDatos="SELECT idVuelo, fecha, valor as vuelos" \
     + ' FROM VuelosCarpo' \
     +      " WHERE idTermino="+termino+" AND fecha between '"+fechaMin+"' AND '"+fechaMax+"' order by fecha desc;"
-    #print(queryDatos)
     df_DatosTiempo=ejecuteQuery(queryDatos)
     ## Convierto la fecha a fecha
     df_DatosTiempo['fecha']=pd.to_datetime(df_DatosTiempo['fecha'])
@@ -126,7 +122,6 @@ def getUltimosVuelos(termino,nCapturas=30):
     queryDatos="SELECT idVuelo, fecha, valor as vuelos" \
     + ' FROM VuelosCarpo' \
     +      " WHERE idTermino="+termino+" order by fecha desc LIMIT "+strCapturas+";"
-    #print(queryDatos)
     df_DatosTiempo=ejecuteQuery(queryDatos)
     ## Convierto la fecha a fecha
     if len(df_DatosTiempo)>0:
@@ -139,7 +134,6 @@ def getTerminos():
     query= "select idTermino, concat(Municipio,' -  ',Termino) as Termino from Terminos T, Municipios M " \
     + "where M.idMunicipio=T.idMunicipio order by Termino"
     df=ejecuteQuery(query)
-    #fechaDate=convertirDate(df_fecha["fecha_MAX"][0])
     return df
 
 ## Nos devuelve el término del idVuelo indicado. 
@@ -147,7 +141,6 @@ def getTermino(idVuelo):
     queryDatos="SELECT idTermino" \
     + ' FROM VuelosCarpo' \
     +      " WHERE idVuelo="+idVuelo+";"
-    #print(queryDatos)
     df_DatosTiempo=ejecuteQuery(queryDatos)
     return df_DatosTiempo['idTermino'][0]
 
@@ -160,7 +153,7 @@ def borraVuelo(id):
     sql="delete from VuelosCarpo where idVuelo = :id"
     with __engine.connect() as connection:
         connection.execute(text(sql), {"id": id})
-        connection.commit()  # Asegúrate de hacer commit si es necesario
+        connection.commit()  
 
 ## PROCEDIMIENTOS Y FUNCIONES PARA TRABAJAR CON TEMPERATURAS DIARIAS.
 
@@ -169,7 +162,6 @@ def getDatosTiempo(estacion,fechaMin='2005-01-01',fechaMax=datetime.datetime.tod
     queryDatos="SELECT Estacion, fecha, TMax, TMed, TMin, TsMax, TsMed, TsMin, HrMax, HrMed, HrMin, PAc, RgAc, VVMax, VVMed" \
     + ' FROM TemperaturasDiarias' \
     +      " WHERE Estacion="+estacion+" AND fecha between '"+fechaMin+"' AND '"+fechaMax+"' order by fecha desc;"
-    #print(queryDatos)
     df_DatosTiempo=ejecuteQuery(queryDatos)
     ## Convierto la fecha a fecha
     df_DatosTiempo['fecha']=pd.to_datetime(df_DatosTiempo['fecha'])
@@ -181,7 +173,6 @@ def getDatosTiempoDias(estacion,ndias=30):
     queryDatos="SELECT Estacion, fecha, TMax, TMed, TMin, TsMax, TsMed, TsMin, HrMax, HrMed, HrMin, PAc, RgAc, VVMax, VVMed" \
     + ' FROM TemperaturasDiarias' \
     +      " WHERE Estacion="+estacion+" order by fecha desc LIMIT "+str(ndias)+";"
-    #print(queryDatos)
     df_DatosTiempo=ejecuteQuery(queryDatos)
     ## Convierto la fecha a fecha
     df_DatosTiempo['fecha']=pd.to_datetime(df_DatosTiempo['fecha'])
@@ -206,7 +197,6 @@ def borraDatosTemperatura(idEstacion, fechaMin, fechaMax):
 def getMunicipios():
     query='select * from Municipios' 
     df=ejecuteQuery(query)
-    #fechaDate=convertirDate(df_fecha["fecha_MAX"][0])
     return df
 
 ### Obtención de los municipios que tenemos en base de datos y sus estaciones de referencia
@@ -219,7 +209,6 @@ def getMunicipiosEstacion():
            and de.estacion=e.estacion
            and m.estacion=e.estacion''' 
     df=ejecuteQuery(query)
-    #fechaDate=convertirDate(df_fecha["fecha_MAX"][0])
     return df
 
 ## Obtiene los datos medios de los últimos x días (22, por defecto) para la última fecha
@@ -235,8 +224,6 @@ def getModelo(municipio,dias=22):
    and M.Estacion=TD1.Estacion
  group by TD1.fecha order by TD1.fecha DESC LIMIT 1'''
     df_Modelo=ejecuteQuery(queryDatos)
-    ## Convierto la fecha a fecha
-   ## df_Modelo ['fecha']=pd.to_datetime(df_Modelo['fecha'])
     return df_Modelo    
 
 
@@ -246,9 +233,7 @@ def getPrediccion(municipio):
     queryDatos="SELECT  fecha, TMax, TMed, TMin, HrMax, HrMed, HrMin, ProbPrecip, VVMed" \
     + ' FROM PrediccionAEMET' \
     +      " WHERE idMunicipio="+municipio+";"
-    #print(queryDatos)
     df_DatosTiempo=ejecuteQuery(queryDatos)
-    ## Convierto la fecha a fecha
     df_DatosTiempo['fecha']=pd.to_datetime(df_DatosTiempo['fecha'])
     return df_DatosTiempo
 

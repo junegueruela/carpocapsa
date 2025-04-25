@@ -1,5 +1,6 @@
+# coding: utf-8
 #Modulo obtenerDatos
-#Nos permite comunicarnos con la API de la CAR para recuperar la informacion de su red de estaciones clim�ticas
+#Nos permite comunicarnos con la API de la CAR para recuperar la informacion de su red de estaciones climáticas
 
 import pandas as pd
 import numpy as np
@@ -12,7 +13,7 @@ import util as ut
 __apiKey__="eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJqdW5lZ3VlcnVlbGFAZ21haWwuY29tIiwianRpIjoiYjMzZmVkYTYtODEzOS00ZDdjLWEyOTktN2Q0M2NiYzMwZDA5IiwiaXNzIjoiQUVNRVQiLCJpYXQiOjE3MTM1NDYzODEsInVzZXJJZCI6ImIzM2ZlZGE2LTgxMzktNGQ3Yy1hMjk5LTdkNDNjYmMzMGQwOSIsInJvbGUiOiIifQ.hZT8YCEAuhb8tZmrTdBf7KFi6k3U5cV_ln-AdXiBFxk"
 
 
-## Obtenemos la predicci�n semanal de la AEMET para un municipio con su codigo.
+## Obtenemos la predicción semanal de la AEMET para un municipio con su codigo.
 def getPrediccionAemet(municipio):
     conn = http.client.HTTPSConnection("opendata.aemet.es")
 
@@ -20,27 +21,25 @@ def getPrediccionAemet(municipio):
         'cache-control': "no-cache"
         }
     #https://opendata.aemet.es/opendata/api/prediccion/especifica/municipio/diaria/16125 -> Es la de Rincon 
-    ##Obtenemos la predicci�n clim�tica por municipio, le añadimos el prefijo 26
+    ##Obtenemos la predicción climática por municipio, le añadimos el prefijo 26
     conn.request("GET", "/opendata/api/prediccion/especifica/municipio/diaria/26"+municipio.zfill(3)+"/?api_key="+__apiKey__, headers=headers)
     res = conn.getresponse()
     data = res.read()
-    #print(data.decode("latin-1"))
     json_response=json.loads(data.decode("latin-1"))
-    #json_response=json.loads(data)
     URL=json_response['datos']
-    ## Llamanos a la URL que est� en la clave datos y nos devuelve un json con las predicciones
+    ## Llamanos a la URL que está en la clave datos y nos devuelve un json con las predicciones
     response_t = requests.get(URL)
     data=response_t.json()
     pPrediccion=data[0]['prediccion']['dia']
-    ## Obtenemos un dataframe con la temperatura m�xima y m�nima
+    ## Obtenemos un dataframe con la temperatura máxima y mínima
     temperaturas = []
     for dia in pPrediccion:
         fecha = dia['fecha']
         maxima = dia['temperatura']['maxima']
         minima = dia['temperatura']['minima']
-        ## La temperatura media, guarda datos cada x horas los primeros dos d�as.
-        ## As� que hago una media de esos valores.
-        ## Si no existen, hago la media entre m�xima y m�nima
+        ## La temperatura media, guarda datos cada x horas los primeros dos días.
+        ## Así que hago una media de esos valores.
+        ## Si no existen, hago la media entre máxima y mínima
         tms=[tm['value'] for tm  in dia['temperatura']['dato']]
         media=sum(tms)/len(tms) if tms else (maxima+minima)/2
         hrMaxima=dia['humedadRelativa']['maxima']
@@ -67,22 +66,22 @@ def getPrediccionAemet(municipio):
 def getDatosClimaticosCAR(fIni, fFin, estacion):
     ''' 
     Obtenemos los datos relativos a
-        Temperatura T: M�xima, media y m�nima
-        Temperatura del suelo TS: M�xima, media y m�nima.
-        Humedad relativa Hr: M�xima, media y m�nima
-        Precipitaci�n acumulada PAc
-        �ndice de radiaci�n acumulada RgAc
-        Velocidad del viento en km/h VV: M�xima y media.
+        Temperatura T: máxima, media y mínima
+        Temperatura del suelo TS: máxima, media y mínima.
+        Humedad relativa Hr: máxima, media y mínima
+        Precipitación acumulada PAc
+        Índice de radiación acumulada RgAc
+        Velocidad del viento en km/h VV: máxima y media.
     Args: 
          fIni: fecha de incio de la consulta
          fFin: Fecha fin de la consulta
-         estacion: C�digo de estaci�n agroclim�tica que queremos consultar
+         estacion: Código de estación agroclimática que queremos consultar
     Returns:
         Un dataframe con todos los datos
     '''
     URL="https://ias1.larioja.org/apiSiar/servicios/v2/datos-climaticos/"+estacion+ "/D?fecha_inicio="+fIni+"&fecha_fin="+fFin \
     +"&dato_valido=True&parametro=TS&parametro=T"
-    ## Creo un dataFrame vac�o por si falla
+    ## Creo un dataFrame vacío por si falla
     dfT = pd.DataFrame(columns=['fecha','TMax', 'TMed','Tmin','TsMax', 'TsMed','Tsmin'])
     try:
         response = requests.get(URL,timeout=90)
@@ -91,7 +90,7 @@ def getDatosClimaticosCAR(fIni, fFin, estacion):
         df=pd.DataFrame(j_data['datos'])
         ## Substituyo lo - por nulos
         df = df.replace('-','')
-        ## A veces da varias medidas para un d�a de un par�metro, as� que selecciono la media
+        ## A veces da varias medidas para un día de un parámetro, así que selecciono la media
         df['valor']=df['valor'].astype('float')
         df=df.groupby(['parametro','fecha','funcion_agregacion'])['valor'].mean().reset_index()
         df['valor']=df['valor'].round(2)
@@ -102,13 +101,13 @@ def getDatosClimaticosCAR(fIni, fFin, estacion):
         dfTe=pd.merge(dfTMax,dfTMed, on='fecha',how='left')
         dfTe=pd.merge(dfTe,dfTMin, on='fecha',how='left')
         ## Recupero las temperaturas del suelo y las agrupo en un dataframe
-        ## Como las temperatus del suelo tienen varias medidas, hago una �nica agrupaci�n por fecha primero
+        ## Como las temperatus del suelo tienen varias medidas, hago una �nica agrupaciónpor fecha primero
         dfTsMax=df[(df['parametro']=='TS')&(df['funcion_agregacion']=='Max')][['fecha','valor']].rename(columns={'valor':'TsMax'})
         dfTsMed=df[(df['parametro']=='TS')&(df['funcion_agregacion']=='Med')][['fecha','valor']].rename(columns={'valor':'TsMed'})
         dfTsMin=df[(df['parametro']=='TS')&(df['funcion_agregacion']=='Min')][['fecha','valor']].rename(columns={'valor':'TsMin'})
         dfTs=pd.merge(dfTsMax,dfTsMed, on='fecha',how='left')
         dfTs=pd.merge(dfTs,dfTsMin, on='fecha',how='left')
-        ## hago un merge de la Temperatura y la Temperatura m�xima
+        ## hago un merge de la Temperatura y la Temperatura máxima
         dfT=pd.merge(dfTe,dfTs,on='fecha',how='left')
     except requests.exceptions.Timeout:
         print ("Time out al consultar las temperaturas")
@@ -118,7 +117,7 @@ def getDatosClimaticosCAR(fIni, fFin, estacion):
         print ("No ha devuelto datos la consulta")
     URL="https://ias1.larioja.org/apiSiar/servicios/v2/datos-climaticos/"+estacion+ "/D?fecha_inicio="+fIni+"&fecha_fin="+fFin \
     +"&dato_valido=True&parametro=Hr"
-    ## Creo un dataFrame vac�o por si falla
+    ## Creo un dataFrame vacío por si falla
     dfHr = pd.DataFrame(columns=['fecha','HrMax', 'HrMed','Hrmin'])
     try:
         response = requests.get(URL,timeout=90)
@@ -127,7 +126,7 @@ def getDatosClimaticosCAR(fIni, fFin, estacion):
         df=pd.DataFrame(j_data['datos'])
         ## Substituyo lo - por nulos
         df = df.replace('-','')
-        ## A veces da varias medidas para un d�a de un par�metro, as� que selecciono la media
+        ## A veces da varias medidas para un día de un parámetro, así que selecciono la media
         df['valor']=df['valor'].astype('float')
         df=df.groupby(['parametro','fecha','funcion_agregacion'])['valor'].mean().reset_index()
         df['valor']=df['valor'].round(2)
@@ -143,10 +142,10 @@ def getDatosClimaticosCAR(fIni, fFin, estacion):
          print ("Error al consultar la humedad relativa")
     except Exception as e:
         print ("No ha devuelto datos la consulta")
-    ## Hago la tercera petici�n
+    ## Hago la tercera petición
     URL="https://ias1.larioja.org/apiSiar/servicios/v2/datos-climaticos/"+estacion+ "/D?fecha_inicio="+fIni+"&fecha_fin="+fFin \
     +"&dato_valido=True&parametro=P&parametro=Rg"
-    ## Creo un dataFrame vac�o por si falla
+    ## Creo un dataFrame vacío por si falla
     dfR = pd.DataFrame(columns=['fecha','Pac', 'RgAc'])
     try:
         response = requests.get(URL,timeout=90)
@@ -155,13 +154,13 @@ def getDatosClimaticosCAR(fIni, fFin, estacion):
         df=pd.DataFrame(j_data['datos'])
         ## Substituyo lo - por nulos
         df = df.replace('-','')
-        ## A veces da varias medidas para un d�a de un par�metro, as� que selecciono la media
+        ## A veces da varias medidas para un día de un parámetro, así que selecciono la media
         df['valor']=df['valor'].astype('float')
         df=df.groupby(['parametro','fecha','funcion_agregacion'])['valor'].mean().reset_index()
         df['valor']=df['valor'].round(2)
-        ## Obtengo el dataframe para la precipitaci�n acumulada
+        ## Obtengo el dataframe para la precipitaciónacumulada
         dfPAc=df[(df['parametro']=='P')][['fecha','valor']].rename(columns={'valor':'PAc'})
-        ## Recupero los �ndice de radiaci�n acumulada
+        ## Recupero los índice de radiaciónacumulada
         dfRgAc=df[(df['parametro']=='Rg')&(df['funcion_agregacion']=='Ac')][['fecha','valor']].rename(columns={'valor':'RgAc'})
         dfR=pd.merge(dfPAc,dfRgAc,on='fecha',how='left') 
     except requests.exceptions.Timeout:
@@ -170,10 +169,10 @@ def getDatosClimaticosCAR(fIni, fFin, estacion):
          print ("Error al consultar las precipitaciones")
     except Exception as e:
         print ("No ha devuelto datos la consulta")
-    ## Hago la cuarta petici�n
+    ## Hago la cuarta petición
     URL="https://ias1.larioja.org/apiSiar/servicios/v2/datos-climaticos/"+estacion+ "/D?fecha_inicio="+fIni+"&fecha_fin="+fFin \
     +"&dato_valido=True&parametro=VV"
-    ## Creo un dataFrame vac�o por si falla
+    ## Creo un dataFrame vacío por si falla
     dfVV = pd.DataFrame(columns=['fecha','VVMax', 'VVMed'])
     try:
         response = requests.get(URL,timeout=90)
@@ -182,13 +181,13 @@ def getDatosClimaticosCAR(fIni, fFin, estacion):
         df=pd.DataFrame(j_data['datos'])
         ## Substituyo lo - por nulos
         df = df.replace('-','')
-        ## A veces da varias medidas para un d�a de un par�metro, as� que selecciono la media
+        ## A veces da varias medidas para un día de un parámetro, así que selecciono la media
         df['valor']=df['valor'].astype('float')
         ## Como es el viento, lo convierto en km/h
         df['valor']=df['valor']*3.6
         df=df.groupby(['parametro','fecha','funcion_agregacion'])['valor'].mean().reset_index()
         df['valor']=df['valor'].round(2)
-        ## Recupero la velocidad del viento m�ximo y media y las agrupo en un dataframe
+        ## Recupero la velocidad del viento máximo y media y las agrupo en un dataframe
         dfVVMax=df[(df['parametro']=='VV')&(df['funcion_agregacion']=='Max')][['fecha','valor']].rename(columns={'valor':'VVMax'})
         dfVVMed=df[(df['parametro']=='VV')&(df['funcion_agregacion']=='Med')][['fecha','valor']].rename(columns={'valor':'VVMed'})
         dfVV=pd.merge(dfVVMax,dfVVMed,on='fecha',how='left')
@@ -202,7 +201,7 @@ def getDatosClimaticosCAR(fIni, fFin, estacion):
     dfT=pd.merge(dfT,dfHr,on='fecha',how='left')
     dfT=pd.merge(dfT,dfR,on='fecha',how='left')
     dfT=pd.merge(dfT,dfVV,on='fecha',how='left')    
-    ##A�ado la columna estaci�n y la pongo al principio
+    ##Añado la columna estación y la pongo al principio
     dfT['estacion']=estacion
     dfT.replace('',np.nan)
     dfT = dfT[['estacion'] + [col for col in dfT.columns if col != 'estacion']]
@@ -213,7 +212,7 @@ def getDatosClimaticosCAR(fIni, fFin, estacion):
 
 
 
-## Dada una estaci�n meteorol�gica, obtengo los datos clim�ticos desde la �ltima medici�n
+## Dada una estación meteorológica, obtengo los datos climáticos desde la íltima medición
 ## Y los guardo en base de datos.
 def actualizarEstacion(estacion):
     strEstacion=str(estacion)
@@ -224,7 +223,7 @@ def actualizarEstacion(estacion):
         cS.insertarDatosTiempo(dfSalida)
         print ("Estacion "+strEstacion+" actualizada correctamente")
     except Exception as e:
-       print('Error al insertar datos de la estaci�n ' + strEstacion + ' para el rango de fecha de '+ str(fechaInicio) + ' a ' + str(fechaFin))
+       print('Error al insertar datos de la estación ' + strEstacion + ' para el rango de fecha de '+ str(fechaInicio) + ' a ' + str(fechaFin))
 
 
 
@@ -236,7 +235,7 @@ def actualizarTodasEstaciones():
         actualizarEstacion(estacion)
 
 
-## Dada un municipio, obtengo la predicci�n
+## Dada un municipio, obtengo la predicción
 ## Y los guardo en base de datos.
 def actualizarPrediccion(municipio):
     strMunicipio=str(municipio)
@@ -246,17 +245,16 @@ def actualizarPrediccion(municipio):
     try:
         cS.borraPrediccion(municipio)
         cS.insertarPrediccion(dfSalida)
-        print('Predicci�n de '+strMunicipio+' actualizada correctamente')
+        print('Predicción de '+strMunicipio+' actualizada correctamente')
        
     except Exception as e:
-       print('Error al insertar predicci�n del municipio '+strMunicipio)
+       print('Error al insertar predicción del municipio '+strMunicipio)
 
-## Actualizo la predicci�n de todos los Municipios
+## Actualizo la predicción de todos los Municipios
 def actualizarPrediccionMunicipios():
     dfMunicipios=cS.getMunicipios()
     for municipio in dfMunicipios['idMunicipio']:
         actualizarPrediccion(municipio)
-# In[ ]:
 
 
 def calcularModelo(dias):

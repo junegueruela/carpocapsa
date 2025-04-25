@@ -24,7 +24,7 @@ login_manager = LoginManager(app)
 login_manager.login_view = "login"
 
 # Modelo de usuario
-# Clase Usuario adaptada para trabajar con los datos de la funci�n obtenerUsuario
+# Clase Usuario adaptada para trabajar con los datos de la función obtenerUsuario
 class Usuario(UserMixin):
     def __init__(self, id, usuario, clave,nombre,email,tecnico):
         self.id= id
@@ -44,7 +44,7 @@ def load_user(user_id):
     df=cS.getUsuarioPorID(user_id)
     
     if not df.empty:
-        # Si el DataFrame no está vacóp, creamos un objeto Usuario
+        # Si el DataFrame no está vacío, creamos un objeto Usuario
         user_data = df.iloc[0]  # Tomamos la primera fila
         user = Usuario(int(user_data['id']), user_data['usuario'], user_data['clave'],user_data['nombre'],user_data['email'],user_data['tecnico'])
         return user
@@ -54,7 +54,7 @@ def load_user(user_id):
 @app.add_template_filter
 def today(date):
     return date.strftime('%Y-%m-%d')
-@app.add_template_global ## Me a�ade la funci�n para todas mis plantillas del proyecto
+@app.add_template_global ## Me añade la función para todas mis plantillas del proyecto
 
 @app.route("/login", methods=['GET','POST'])
 def login():
@@ -87,6 +87,7 @@ def login():
             return render_template("/auth/login.html",form=form,error=error)
     return render_template("/auth/login.html",form=form)
 
+# Me cambia la clave del usuario
 @app.route("/cambiarClave", methods=['GET','POST'])
 @login_required
 def cambiarClave():
@@ -120,7 +121,7 @@ def index():
     leyenda=ut.leyendaTiempoCorta()
     return render_template('index.html',estaciones=estaciones.to_html(index=False, classes='tablas'),municipios=municipios.to_html(index=False, classes='tablas'), \
                            leyenda=leyenda.to_html(index=False, classes='tablas'))
-   #en lugar de crear una funci�n y pasarla como plantilla, la paso como parámetro
+   #en lugar de crear una función y pasarla como plantilla, la paso como parámetro
 
 # Ruta para cerrar sesión
 @app.route('/logout')
@@ -146,7 +147,7 @@ def estacion():
         df=df.rename(columns={"fecha":"Fecha"})
         leyenda=ut.leyendaTiempo()
         return render_template("/estaciones/estacion.html",form=eForm,formB=bForm, datos=df.to_html(index=False, classes='tablas'), leyenda=leyenda.to_html(index=False, classes='tablas'))
-   ## Si hemos seleccionado el bot�n borrar, borramos.
+   ## Si hemos seleccionado el botón borrar, borramos.
     if bForm.validate_on_submit() and 'borrar' in request.form:
         estacion = request.form.get('estacion')
         fechaDesde=bForm.fechaDesde.data
@@ -187,9 +188,9 @@ def vuelo():
     if 'borrar' in request.form:
            termino = tForm.termino.data
            idvuelo=request.form.get("idVuelo")
-           # Aseg�rate de mantener el valor del SelectField
+           # Asegñurate de mantener el valor del SelectField
            tForm.termino.data = termino
-           print(f"Restaurando el valor seleccionado despu�s de borrar: {tForm.termino.data}")  # Prueba de valor
+           print(f"Restaurando el valor seleccionado después de borrar: {tForm.termino.data}")  # Prueba de valor
            nTermino=str(cS.getTermino(idvuelo))
            tForm.termino.data = nTermino
            cS.borraVuelo(idvuelo)
@@ -214,7 +215,7 @@ def vuelo():
            return render_template("/vuelos/vuelo.html",formT=tForm, formA=aForm, datos=df.to_html(index=False, escape=False, classes="tablas"))
     ## Si damos al de aForm añadimos la captura y mostramos las últimas 20 
     if aForm.validate_on_submit() and 'submit2' in request.form:
-           termino = request.form.get('termino')  # Obtener el valor de 'termicd 
+           termino = request.form.get('termino')  # Obtener el valor de termino
            fechaCaptura=aForm.fechaCaptura.data
            numVuelos=aForm.numVuelos.data
            strFechaCaptura=fechaCaptura.strftime("%Y-%m-%d")

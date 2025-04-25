@@ -1,8 +1,4 @@
-#!/usr/bin/env python
 # coding: utf-8
-
-# In[1]:
-
 
 import pyodbc
 import pandas as pd
@@ -35,7 +31,7 @@ def borraVuelo(id):
     sql="delete from VuelosCarpo where idVuelo = :id"
     with __engine.connect() as connection:
         connection.execute(text(sql), {"id": id})
-        connection.commit()  # Asegúrate de hacer commit si es necesariOS
+        connection.commit()  
 
 ## Le pasamos un dataframe con los de una captura.
 def insertarVuelo(df):
@@ -46,7 +42,6 @@ def getDatosVueloMunicipio(municipio,fechaMin='2005-01-01',fechaMax=datetime.dat
     queryDatos="SELECT idMunicipio, fecha, avg(valor) as numVuelos" \
     + ' FROM VuelosCarpo VC, Terminos T' \
     +      " WHERE  T.IdTermino = VC.IdTermino and IdMunicipio="+municipio+" AND fecha between '"+fechaMin+"' AND '"+fechaMax+"' group by fecha, IdMunicipio order by fecha;"
-    #print(queryDatos)
     df_DatosTiempo=ejecuteQuery(queryDatos)
     ## Convierto la fecha a fecha
     df_DatosTiempo['fecha']=pd.to_datetime(df_DatosTiempo['fecha'])
@@ -57,7 +52,7 @@ def getDatosVueloMunicipioTermino(municipio,fechaMin='2005-01-01',fechaMax=datet
     queryDatos="SELECT T.idMunicipio idMunicipio, T.idTermino idTermino, fecha, valor as numVuelos" \
     + ' FROM VuelosCarpo VC, Terminos T' \
     +      " WHERE  T.IdTermino = VC.IdTermino and T.IdMunicipio="+municipio+" AND fecha between '"+fechaMin+"' AND '"+fechaMax+"' order by fecha;"
-    #print(queryDatos)
+
     df_DatosTiempo=ejecuteQuery(queryDatos)
     ## Convierto la fecha a fecha
     df_DatosTiempo['fecha']=pd.to_datetime(df_DatosTiempo['fecha'])
@@ -68,7 +63,7 @@ def getDatosVuelos(termino,fechaMin='2005-01-01',fechaMax=datetime.datetime.toda
     queryDatos="SELECT fecha, valor as vuelos" \
     + ' FROM VuelosCarpo' \
     +      " WHERE idTermino="+termino+" AND fecha between '"+fechaMin+"' AND '"+fechaMax+"' order by fecha desc;"
-    #print(queryDatos)
+
     df_DatosTiempo=ejecuteQuery(queryDatos)
     ## Convierto la fecha a fecha
     df_DatosTiempo['fecha']=pd.to_datetime(df_DatosTiempo['fecha'])
@@ -86,7 +81,7 @@ def getFechaMaxima(estacion):
     date_format= '%Y-%m-%d'
     maxT='select max(fecha) as fecha_MAX from TemperaturasDiarias where Estacion='+estacion
     df_fecha=ejecuteQuery( maxT)
-    #fechaDate=convertirDate(df_fecha["fecha_MAX"][0])
+
     return df_fecha["fecha_MAX"][0]
 
 
@@ -95,7 +90,7 @@ def getFechaMinima(estacion):
     date_format= '%Y-%m-%d'
     minT='select min(fecha) as fecha_MIN from TemperaturasDiarias where Estacion='+estacion
     df_fecha=ejecuteQuery( minT)
-    #fechaDate=convertirDate(df_fecha["fecha_MAX"][0])
+
     return df_fecha["fecha_MIN"][0]
 
 ## Nos devuelve un dataframe con los datos metereológicos de la estación indicada en el periodo entre fechaMin y fechaMax
@@ -103,7 +98,7 @@ def getDatosTiempo(estacion,fechaMin='2005-01-01',fechaMax=datetime.datetime.tod
     queryDatos="SELECT Estacion, fecha, TMax, TMed, TMin, TsMax, TsMed, TsMin, HrMax, HrMed, HrMin, PAc, RgAc, VVMax, VVMed" \
     + ' FROM TemperaturasDiarias' \
     +      " WHERE Estacion="+estacion+" AND fecha between '"+fechaMin+"' AND '"+fechaMax+"';"
-    #print(queryDatos)
+
     df_DatosTiempo=ejecuteQuery(queryDatos)
     ## Convierto la fecha a fecha
     df_DatosTiempo['fecha']=pd.to_datetime(df_DatosTiempo['fecha'])
@@ -114,7 +109,7 @@ def getDatosTiempo(estacion,fechaMin='2005-01-01',fechaMax=datetime.datetime.tod
 def getEstaciones():
     query='select * from Estaciones' 
     df=ejecuteQuery(query)
-    #fechaDate=convertirDate(df_fecha["fecha_MAX"][0])
+
     return df
 
 ### Obtención de la mayor fecha con datos para una estación en concreto
@@ -122,7 +117,7 @@ def getEstacion(estacion):
     date_format= '%Y-%m-%d'
     sqlEstacion='select * from Estaciones where estacion='+estacion
     df=ejecuteQuery( sqlEstacion)
-    #fechaDate=convertirDate(df_fecha["fecha_MAX"][0])
+
     return df
 
 
@@ -130,7 +125,7 @@ def getEstacion(estacion):
 def getMunicipios():
     query='select * from Municipios' 
     df=ejecuteQuery(query)
-    #fechaDate=convertirDate(df_fecha["fecha_MAX"][0])
+
     return df
 
 
@@ -140,7 +135,7 @@ def getMunicipios():
 def getMunicipiosConVuelos():
     query='select distinct(idMunicipio) municipio from vVuelosMedias' 
     df=ejecuteQuery(query)
-    #fechaDate=convertirDate(df_fecha["fecha_MAX"][0])
+
     return df
 
 ## GESTIÓN DE LAS PREDICCIONES AEMET
@@ -163,7 +158,7 @@ def getPrediccion(municipio):
     queryDatos="SELECT  fecha, TMax, TMed, TMin, HrMax, HrMed, HrMin, ProbPrecip, VVMed" \
     + ' FROM PrediccionAEMET' \
     +      " WHERE idMunicipio="+municipio+";"
-    #print(queryDatos)
+
     df_DatosTiempo=ejecuteQuery(queryDatos)
     ## Convierto la fecha a fecha
     df_DatosTiempo['fecha']=pd.to_datetime(df_DatosTiempo['fecha'])

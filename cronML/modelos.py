@@ -1,3 +1,5 @@
+# coding: utf-8
+
 import pandas as pd
 import numpy as np
 import datetime
@@ -187,31 +189,28 @@ def calcularModeloSimple():
         df['generacion']=df['dias_grado_ac'].apply(lambda x: (x-100)//600 +1)
         df[df['generacion']==0]['generacion']=1
         
-        # Me quedo con los días acumulados por generación
-        #df['dias_grado_ac']=df['dias_grado_ac'].apply(lambda x: x%600)
-        
+
         # Calculo el día dentro del año si días grado > 0
         df['dia']=df['dias_grado'].apply(lambda x: 0 if x <=0 else 1)
         df['dia_g'] = df.groupby(['anyo', 'generacion'])['dia'].cumsum()
-        #df['TCrep']=df['TMin'] + (df['TMax']-df['TMin'])*0.7
-        
+
         ## Calculamos hr media y RgAc de los últimos 7 días
         ## Calculamos la temperatura crepuscular pues las polillas tienen un vuelo crepuscular
         ## Y la media de rachas de viento máxima pues el vuelo se ve influenciado por él
         dias=7
         df['t_min'] = df['TMin'].rolling(window=dias, min_periods=1).mean().fillna(0)
         df['t_max'] = df['TMax'].rolling(window=dias, min_periods=1).mean().fillna(0)
-        #df['t_cresp'] = df['TCrep'].rolling(window=dias, min_periods=1).mean().fillna(0)
+
         df['t_med'] = df['TMed'].rolling(window=dias, min_periods=1).mean().fillna(0)
         df['hr_med'] = df['HrMed'].rolling(window=dias, min_periods=1).mean().fillna(0)
         df['rg_ac'] = df['RgAc'].rolling(window=dias, min_periods=1).mean().fillna(0)
         df['vv_med'] = df['VVMed'].rolling(window=dias, min_periods=1).mean().fillna(0)
+
         ## Calculamos la temperatura crepuscular pues las polillas tienen un vuelo crepuscular
         dias=7
         ## Y la media de rachas de viento máxima pues el vuelo se ve influenciado por él
         df['t_min_p'] = df['TMin'].rolling(window=dias, min_periods=1).mean().shift(-6).fillna(0)
         df['t_max_p'] = df['TMax'].rolling(window=dias, min_periods=1).mean().shift(-6).fillna(0)
-        #df['t_cresp_p'] = df['TCrep'].rolling(window=dias, min_periods=1).mean().shift(-6).fillna(0)
         df['t_med_p'] = df['TMed'].rolling(window=dias, min_periods=1).mean().shift(-6).fillna(0)
         df['hr_med_p'] = df['HrMed'].rolling(window=dias, min_periods=1).mean().shift(-6).fillna(0)
         df['rg_ac_p'] = df['RgAc'].rolling(window=dias, min_periods=1).mean().shift(-6).fillna(0)
@@ -246,7 +245,6 @@ def calcularModeloSimple():
         # Calculamos la incidencia normalizada como el máximo de incidencia de las cinco muestras posteriores, entre 9 y 10 días
         # Pues en un periodo hay riesgo si se ha detectado en uno de sus días
         dfM['incidencia'] = dfM['incidencia'].rolling(window=4, min_periods=1).max().shift(-3).fillna(0)
-        #dfM.loc[dfM['anyo'] !=dfM['anyo'].shift(2).fillna(0), 'incidencia'] = 0
 
         # Nos quedamos con el máximo de incidencia y de vuelos para cada fecha en cada municipio
         # pues es como trabajan en la denominación
@@ -260,7 +258,7 @@ def calcularModeloSimple():
             dfM[f'num_vuelos_{i}'] = dfM['numVuelos'].shift(i).fillna(0)
         
         dfMerged= pd.merge_asof(df, dfM, on=['fecha'], direction='backward', tolerance=pd.Timedelta(days=7)) 
-        #dfMerged=dfMerged.drop(['Estacion','dias_grado'],axis=1)
+
         dfMerged['anyo']=dfMerged['anyo_x']
         dfMerged = dfMerged.dropna(subset=["incidencia"])
         dfMunicipios= pd.concat([dfMunicipios, dfMerged], axis=0)
@@ -270,7 +268,7 @@ def calcularModeloSimple():
                          'dias_grado_ac_7','rg_md_7', 'hr_md_7','t_med_7',\
                          'dias_grado_ac_28','rg_md_28', 'hr_md_28','t_med_28',\
                          'num_vuelos_1','num_vuelos_2','num_vuelos_3','num_vuelos_4','num_vuelos_5','num_vuelos_6']]
-    # Obtención del modelo de predicción
+
 
 ## Normalizamos una sola file
 def calcularModeloMunicipio(municipio,fecha_prediccion,estimar='N'):
@@ -305,7 +303,6 @@ def calcularModeloMunicipio(municipio,fecha_prediccion,estimar='N'):
     dias=7
     df['t_min'] = df['TMin'].rolling(window=dias, min_periods=1).mean().fillna(0)
     df['t_max'] = df['TMax'].rolling(window=dias, min_periods=1).mean().fillna(0)
-    #df['t_cresp'] = df['TCrep'].rolling(window=dias, min_periods=1).mean().fillna(0)
     df['t_med'] = df['TMed'].rolling(window=dias, min_periods=1).mean().fillna(0)
     df['hr_med'] = df['HrMed'].rolling(window=dias, min_periods=1).mean().fillna(0)
     df['rg_ac'] = df['RgAc'].rolling(window=dias, min_periods=1).mean().fillna(0)
@@ -373,5 +370,5 @@ def calcularModeloMunicipio(municipio,fecha_prediccion,estimar='N'):
                          'dias_grado_ac_7','rg_md_7', 'hr_md_7','t_med_7',\
                          'dias_grado_ac_28','rg_md_28', 'hr_md_28','t_med_28',\
                          'num_vuelos_1','num_vuelos_2','num_vuelos_3','num_vuelos_4','num_vuelos_5','num_vuelos_6']]
-# Obtención del modelo de predicción
+
 

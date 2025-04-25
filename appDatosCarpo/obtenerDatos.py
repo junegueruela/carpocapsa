@@ -21,13 +21,11 @@ def getPrediccionAemet(municipio):
 
     headers = {
         'cache-control': "no-cache"
-        }
-    #https://opendata.aemet.es/opendata/api/prediccion/especifica/municipio/diaria/16125 -> Es la de Rincón 
+        } 
     ##Obtenemos la predicción climática por municipio, le añadimos el prefijo 26
     conn.request("GET", "/opendata/api/prediccion/especifica/municipio/diaria/26"+municipio.zfill(3)+"/?api_key="+__apiKey__, headers=headers)
     res = conn.getresponse()
     data = res.read()
-    #print(data.decode("utf-8"))
     json_response=json.loads(data.decode("utf-8"))
     URL=json_response['datos']
     ## Llamanos a la URL que está en la clave datos y nos devuelve un json con las predicciones
@@ -89,7 +87,7 @@ def getDatosClimaticosCAR(fIni, fFin, estacion):
     try:
         response = requests.get(URL,timeout=90)
         j_data=response.json()
-    ## De la respuesta me quedon con los datos.
+    ## De la respuesta me quedo con los datos.
         df=pd.DataFrame(j_data['datos'])
         ## Substituyo lo - por nulos
         df = df.replace('-','')
@@ -238,7 +236,6 @@ def actualizarTodasEstaciones():
         actualizarEstacion(estacion)
 
 
-# In[ ]:
 ## Dada un municipio, obtengo la predicción
 ## Y los guardo en base de datos.
 def actualizarPrediccion(municipio):
@@ -254,7 +251,7 @@ def actualizarPrediccion(municipio):
     except Exception as e:
        print('Error al insertar predicción del municipio '+strMunicipio)
 
-## Actualizo la predicci�n de todos los Municipios
+## Actualizo la predicción de todos los Municipios
 def actualizarPrediccionMunicipios():
     dfMunicipios=cS.getMunicipios()
     for municipio in dfMunicipios['idMunicipio']:

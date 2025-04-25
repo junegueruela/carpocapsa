@@ -23,7 +23,7 @@ COPY root /etc/crontabs/
 
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Asegurarte de que los permisos son correctos
+# Me aseguro de de que los permisos son correctos
 RUN chmod 0644 /etc/crontabs/root
 RUN chmod 0755 /usr/src/app/hacerpredicciones.sh
 # Iniciar crond en primer plano

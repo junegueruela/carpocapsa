@@ -1,4 +1,5 @@
 services:
+  # Mi primer contenedo es un servidor de base de datos mysql
   mysql:
     image: mysql:latest
     container_name: mySqlDocker
@@ -11,7 +12,8 @@ services:
       MYSQL_MAJOR: innovation
       MYSQL_VERSION: 9.0.1-1.el9
       MYSQL_SHELL_VERSION: 9.0.1-1.el9
-      TZ: Europe/Madrid   # Aquí también puedes establecer la zona horaria
+      TZ: Europe/Madrid   # EStablecer la zona horaria
+    # Tiene dos volúmenes persistentes, uno para los datos y otro para backup
     volumes:
       - mysql_data:/var/lib/mysql
       - backup:/backup
@@ -21,6 +23,7 @@ services:
     runtime: runc
     networks:
     - miRed
+  # Contenedor para hacer backups de mySQL
   automysqlbackup:
     image: selim13/automysqlbackup
     container_name: mySqlbackup
@@ -29,37 +32,45 @@ services:
       DBNAMES: all
       USERNAME: root
       PASSWORD: carpocapsa
-      CRON_SCHEDULE: "30 12 * * 1" ##Diario
-      TZ: Europe/Madrid   # Aquí también puedes establecer la zona horaria
+      # Programo un backup diario
+      CRON_SCHEDULE: "30 12 1 * *" # Diario
+      TZ: Europe/Madrid   # Establecer la zona horaria
+    # Comparte el volumen backup con mysql por si hay que recuperar
     volumes:
       - backup:/backup
     restart: "unless-stopped"
+    # Depende de mysql pues hace backups de él
     depends_on:
         - mysql
     networks:
     - miRed   
-  cron_etl:    # Nuevo servicio
+  # Contenedor que ejecuta diariamente tres guiones.
+  # Uno para traer los datos climáticos del SIAR y otros dos de AEMET
+  # Tiene python, vi y crontab
+  cron_etl:    #
     build:
         context: ./cronETL
-    image: cron_etl       # Imagen construida
-    container_name: cronETL    # Nombre del contenedor
-    hostname: 252654c43934       # Hostname del contenedor  
+    image: cron_etl       
+    container_name: cronETL    
+    hostname: 252654c43934        
     environment:
       PATH: /usr/local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
       LANG: ES.UTF-8
       GPG_KEY: 7169605F62C751356D054A26A821E680E5FA6305
       PYTHON_VERSION: 3.12.6
-      TZ: Europe/Madrid   # Aquí también puedes establecer la zona horaria
-    working_dir: /usr/src/app    # Directorio de trabajo
-    restart: "unless-stopped"               # Políticas de reinicio
+      TZ: Europe/Madrid   
+    working_dir: /usr/src/app    
+    restart: "unless-stopped"               
     networks:
-      - miRed                    # Conectar a la red existente
+      - miRed                    
+  # Contenedor que realiza diariamente las predicciones y reentrena semanalmente el modelo
+  # Tiene python, vi y crontab
   cron_ml:
     build:
         context: ./cronML
-    image: cron_ml           # Imagen para predicción
-    container_name: cronML      # Nombre del contenedor
-    hostname: cront-prediccion          # Hostname
+    image: cron_ml           
+    container_name: cronML     
+    hostname: cront-prediccion          
     environment:
       PATH: /usr/local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
       LANG: ES.UTF-8
@@ -70,24 +81,27 @@ services:
     restart: "unless-stopped"
     networks:
       - miRed
-  appdatoscarpo:                  # Nuevo servicio
+  # Este contenedor ejecuta la aplicación FLASK que permite a la denominación
+  # meter los datos de capturas y comprobar que se han traido bien los climáticos
+  appdatoscarpo:                  
     build:
         context: ./appDatosCarpo
-    image: appdatoscarpo      # Imagen que has construido
-    container_name: appDatosCarpo   # Nombre del contenedor
-    hostname: 7f8bbf70ff82       # Hostname del contenedor
+    image: appdatoscarpo     
+    container_name: appDatosCarpo   
+    hostname: 7f8bbf70ff82       
     environment:
       PATH: /usr/local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin 
       LANG: ES.UTF-8
       GPG_KEY: 7169605F62C751356D054A26A821E680E5FA6305
       PYTHON_VERSION: 3.12.6
-      TZ: Europe/Madrid   # Aquí también puedes establecer la zona horaria
-    working_dir: /usr/src/app    # Directorio de trabajo
+      TZ: Europe/Madrid   
+    working_dir: /usr/src/app    
+    # Escucha en el puerto 5000 y lo mapeo a mi servidor
     ports:
       - "5000:5000"
-    restart: "unless-stopped"                # Políticas de reinicio
+    restart: "unless-stopped"               
     networks:
-      - miRed                    # Conectar a la red existente
+      - miRed                    
 # Me crea los volúmenes de datos y backup para que persistan, si no existen.
 volumes:
   mysql_data:

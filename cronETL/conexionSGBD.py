@@ -1,4 +1,4 @@
-# coding: latin-1
+# coding: utf-8
 # Módulo personalizado para obtener los datos de estación y municipio y almacenarlos en el SGBD
 
 import pyodbc
