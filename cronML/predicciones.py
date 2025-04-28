@@ -122,8 +122,8 @@ def realizarPredicciones():
     estimacionesmunicipios = estimaciones[estimaciones['idMunicipio'].isin(municipios_con_capturas)]
     estimacionesotros = estimaciones[~estimaciones['idMunicipio'].isin(municipios_con_capturas)]
     distancias = cdist(estimacionesotros[atributosE], estimacionesmunicipios[atributosE], metric='euclidean')
-    # Cogemos los dos más cercanos
-    k = 2
+    # Cogemos los tres más cercanos
+    k = 3
     
     # Inicializar una lista para almacenar las probabilidades estimadas
     probabilidades_estimadas = []
