@@ -34,7 +34,7 @@ def entrenarModelo():
     df['anyoC']=df['anyo']
     df['idMunicipioC']=df['idMunicipio']
     df['dias_grado_ac_c']=df['dias_grado_ac']
-    atributos = [ 'altitud','generacionC', 'anyoC', 'dias_grado_ac_c', \
+    atributos = [ 'generacionC', 'anyoC', 'dias_grado_ac_c', \
                  'semana','dia_g', \
                  't_min','t_max','t_med','hr_med','vv_med', \
                  't_min_p','t_max_p','t_med_p','hr_med_p','vv_med_p', \
@@ -65,7 +65,7 @@ def entrenarModelo():
 
 def realizarPredicciones():
     # Definimos las columnas
-    atributos = [ 'altitud','generacionC', 'anyoC', 'dias_grado_ac_c', \
+    atributos = [ 'generacionC', 'anyoC', 'dias_grado_ac_c', \
                  'semana','dia_g', \
                  't_min','t_max','t_med','hr_med','vv_med', \
                  't_min_p','t_max_p','t_med_p','hr_med_p','vv_med_p', \
@@ -109,7 +109,7 @@ def realizarPredicciones():
     dfListaSinvuelos=cS.getMunicipios()
     for municipio in dfListaSinvuelos['idMunicipio']:
         estimacion=mod.calcularModeloMunicipio(municipio,fecha_actual,'S')
-        estimaciones=pd.concat([estimaciones, estimacion[['idMunicipio', 'fecha','altitud','dias_grado_ac', 'semana','dia_g', \
+        estimaciones=pd.concat([estimaciones, estimacion[['idMunicipio', 'fecha','dias_grado_ac', 'semana','dia_g', \
                                                          't_min','t_max','t_med','hr_med','vv_med', \
                                                          't_min_p','t_max_p','t_med_p','hr_med_p','vv_med_p', \
                                                          'dias_grado_ac_7', 'rg_md_7', 'hr_md_7', 't_med_7', \
