@@ -28,8 +28,10 @@ from datetime import datetime, timedelta
 
 def entrenarModelo():
     ## Entrenamos el modelo
-    df=cS.getTodoModelo()
+    #df=cS.getTodoModelo()
+    df=mod.calcularModeloSimple()
     # Definimos las columnas
+    df=df[df['fecha'] < datetime.now() - timedelta(days=7)]
     df['generacionC']=df['generacion']
     df['anyoC']=df['anyo']
     df['idMunicipioC']=df['idMunicipio']

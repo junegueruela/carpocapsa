@@ -103,7 +103,7 @@ def calcularModelo():
         df['rg_ac_p'] = df['RgAc'].rolling(window=dias, min_periods=1).mean().shift(-6).fillna(0)
         #df['vv_med_p'] = df['VVMed'].rolling(window=dias, min_periods=1).mean().shift(-6).fillna(0)
          
-        # Calculo los días grados de las ultimas 5 quincenas
+        # Calculo los días grados de de acuerdo a cada etapa de desarrollo
         # Lo hacemos así porque las condiciones ambientales determinan los distintos estadios de desarrollo
         # del insecto, desde el huevo a la larva, siendo un ciclo completo de varias semanas
         df[['dias_grado_ac_7','t_med_7','rg_md_7','hr_md_7']] =  df.apply(lambda row: calcular_medias(row['fecha'], df, 21, 7), axis=1, result_type='expand')
@@ -355,11 +355,18 @@ def calcularModeloMunicipio(municipio,fecha_prediccion,estimar='N'):
                     'numVuelos':'max'}).reset_index()
         
         # Le añadimos la incidencia de la semana pasada y la anterior para emular un time series
-        for i in range(1,7):
-            dfM[f'num_vuelos_{i}'] = dfM['numVuelos'].shift(i-1).fillna(0)
+        for i in range(1, 7):
+            if len(dfM) >= i:
+                dfM[f'num_vuelos_{i}'] = dfM['numVuelos'].shift(i - 1)
+            else:
+                dfM[f'num_vuelos_{i}'] = np.nan
         
         dfMerged= pd.merge_asof(df_municipio, dfM, on=['fecha'], direction='backward', tolerance=pd.Timedelta(days=7)) 
-        #dfMerged=dfMerged.drop(['Estacion','dias_grado'],axis=1)
+        # Aseguramos que todas las columnas de vuelos existen
+        for i in range(1, 7):
+            col = f'num_vuelos_{i}'
+            if col not in dfMerged.columns:
+                dfMerged[col] = np.nan
         dfMerged['anyo']=dfMerged['anyo_x']
         #dfMerged = dfMerged.dropna(subset=["incidencia"])
         dfMunicipios= pd.concat([df_municipio, dfMerged], axis=0)
