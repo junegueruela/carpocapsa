@@ -105,7 +105,10 @@ services:
 # Me crea los volúmenes de datos y backup para que persistan, si no existen.
 volumes:
   mysql_data:
+      external: true
   backup:
+      external: true
 # Me crea la red 
 networks:
   miRed:
+      external: true

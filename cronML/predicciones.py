@@ -169,10 +169,8 @@ def realizarPredicciones():
     probabilidades['prediccion']=probabilidades['probabilidad'].apply(lambda x: 0 if x < 0.5 else 1)
     probabilidades.sort_values(by='probabilidad').head(40)
     # Convierte todo a datetime, ignorando errores
-    probabilidades["fecha"] = pd.to_datetime(probabilidades["fecha"], errors='coerce')
-    
-    # Ahora suma un día
-    probabilidades["fecha"] = probabilidades["fecha"] + timedelta(days=1)
+    probabilidades["fecha"] =fecha_actual
+
     
     fecha_actual = (datetime.now()).strftime('%Y-%m-%d')
     ## Guardamos las estimaciones

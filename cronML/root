@@ -1,5 +1,5 @@
 # Ejecutar script1.py todos los días a las 12:00 AM
 # do daily/weekly/monthly maintenance
-# min   hour    day     month   weekday command
 30       9       *       *       *       /usr/src/app/hacerpredicciones.sh
-30       8     *       *       0     /usr/src/app/entrenar.sh
+01       8     *       *       0     /usr/src/app/entrenar.sh
+
