@@ -40,12 +40,12 @@ class terminoForm(FlaskForm):
     termino=SelectField("Seleccione una finca: ", choices=[], validators=[DataRequired()])
     nCapturas=IntegerField("Número de entradas a consultar: ", default=20)
     submit=SubmitField("Consultar")
-    fechaMin=DateField("Desde: ", default=datetime.today())
-    fechaMax=DateField("Hasta: ", default=datetime.today())
+    fechaMin=DateField("Desde: ", default=default=lambda:datetime.today())
+    fechaMax=DateField("Hasta: ", default=default=lambda:datetime.today())
     submitF=SubmitField("Consultar por fechas")
 ## Formulario para añadir  los vuelos en un término
 class addVueloTerminoForm(FlaskForm):
-    fechaCaptura=DateField("Fecha de captura: ",default=datetime.today())
+    fechaCaptura=DateField("Fecha de captura: ",default=default=lambda:datetime.today())
     numVuelos=IntegerField("Número de capturas: ", default=0)
     submit2=SubmitField("Añadir")
 
