@@ -82,7 +82,8 @@ def realizarPredicciones():
     
     dfProbabilidades=pd.DataFrame(columns=['municipio','fecha','probabilidad','carpo_detectada'])
     dfListaMunicipios=cS.getMunicipiosConVuelos()
-    fecha_actual = (datetime.now() - timedelta(days=1)).strftime('%Y-%m-%d')
+    #fecha_actual = (datetime.now() - timedelta(days=1)).strftime('%Y-%m-%d')
+    fecha_actual=cS.fechaUltimaCaptura().strftime('%Y-%m-%d')
     #Aplicamos el modelo de RF y el escalador generado para obtener una predicción diaria de los municipios que disponene de fincas de controls
     for municipio in dfListaMunicipios['municipio']:
         prediccion=mod.calcularModeloMunicipio(municipio,fecha_actual,'N')

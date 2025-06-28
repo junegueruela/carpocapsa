@@ -26,6 +26,13 @@ def ejecuteQuery(query):
 
 
 ## GESTIÓN DE LOS VUELOS
+## Obtenemos la fecha máxima de vuelos
+def fechaUltimaCaptura():
+    sql="select max(fecha) as fecha from VuelosCarpo"
+    df=ejecuteQuery(sql)
+    df['fecha'] = pd.to_datetime(df['fecha'], format='%d/%m/%Y')
+    fecha=df['fecha'].iloc[0]
+    return fecha
 ## Borramos un vuelo por su id
 def borraVuelo(id):
     sql="delete from VuelosCarpo where idVuelo = :id"
