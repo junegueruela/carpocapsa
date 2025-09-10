@@ -57,7 +57,7 @@ def entrenarModelo():
         ('undersample', RandomUnderSampler(sampling_strategy=0.9))
     ])
     X_resampled, y_resampled = pipeline.fit_resample(X_train, Y_train)
-    model=RandomForestClassifier(class_weight= None, max_depth=7, min_samples_leaf=4, min_samples_split=2, n_estimators=132)
+    model=RandomForestClassifier(n_jobs=1, class_weight= None, max_depth=7, min_samples_leaf=4, min_samples_split=2, n_estimators=132)
     model.fit(X_resampled,y_resampled) 
     # Guardamos el modelo entrenado
     joblib.dump(model, "random_forest_model.pkl")
