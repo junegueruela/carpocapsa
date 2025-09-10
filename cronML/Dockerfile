@@ -3,6 +3,7 @@ FROM python:3.12.6-alpine3.20
 
 # Instalar Python y cron
 RUN apk update && apk add --no-cache python3 py3-pip bash curl openrc
+RUN apk add --no-cache coreutils util-linux
 RUN apk add --no-cache \
     gcc \
     g++ \
