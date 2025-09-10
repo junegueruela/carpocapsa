@@ -10,7 +10,7 @@ from sqlalchemy import create_engine, text
 ##Ignoramos los warnings
 warnings.filterwarnings('ignore')
 ## Utilizamos mejor sqlalchemy
-__engine = create_engine('mysql+mysqlconnector://Plagas:Plagas@mySqlDocker:3306/Plagas') ## Para el docker
+__engine = create_engine('mysql+mysqlconnector://Plagas:plagas@mySqlDocker:3306/Plagas') ## Para el docker
 ##__engine = create_engine('mysql+mysqlconnector://Plagas:plagas@103.241.67.163:3306/Plagas') ## Para el docker
 ##__engine = create_engine('mysql+mysqlconnector://Plagas:plagas@127.0.0.1:3306/Plagas')  ## Para local
 

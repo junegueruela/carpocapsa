@@ -92,7 +92,7 @@ def realizarPredicciones():
         prediccion['idMunicipioC']=prediccion['idMunicipio']
         prediccion['dias_grado_ac_c']=prediccion['dias_grado_ac']
         prediccion['detectar']=prediccion['num_vuelos_1'].fillna(0)+prediccion['num_vuelos_2'].fillna(0)+prediccion['num_vuelos_3'].fillna(0)
-        prediccion['detectada']=prediccion['detectada'].apply(lambda x: 0 if x <3 else 1)
+        prediccion['detectada']=prediccion['detectar'].apply(lambda x: 0 if x <3 else 1)
         predict=scaler_loaded.transform(prediccion[atributos])
         prediction=rf_loaded.predict(predict)
         probabilidad = rf_loaded.predict_proba(predict)[:, 1]
